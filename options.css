@@ -22,6 +22,7 @@ body {
 }
 
 button,
+select,
 textarea {
   font: inherit;
 }
@@ -79,6 +80,15 @@ label {
   font-weight: 650;
 }
 
+select {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #ffffff;
+  color: var(--text);
+  padding: 10px 12px;
+}
+
 textarea {
   width: 100%;
   min-height: 260px;
@@ -91,6 +101,7 @@ textarea {
   line-height: 1.55;
 }
 
+select:focus,
 textarea:focus {
   border-color: var(--accent);
   outline: 3px solid rgba(23, 105, 224, 0.16);

@@ -89,10 +89,20 @@ p {
   background: var(--panel);
 }
 
-.coin-row img {
+.coin-row img,
+.pair-icon {
   width: 32px;
   height: 32px;
   border-radius: 50%;
+}
+
+.pair-icon {
+  display: grid;
+  place-items: center;
+  background: #e8eef8;
+  color: #284163;
+  font-size: 11px;
+  font-weight: 750;
 }
 
 .coin-name {

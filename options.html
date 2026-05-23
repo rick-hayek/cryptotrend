@@ -11,11 +11,19 @@
       <section class="settings">
         <header>
           <h1>CryptoTrend 设置</h1>
-          <p>配置弹窗里显示的 CoinGecko 币种 ID。每行一个，例如 bitcoin、ethereum。</p>
+          <p id="sourceHelp">配置弹窗里显示的 CoinGecko 币种 ID。每行一个，例如 bitcoin、ethereum。</p>
         </header>
 
-        <label for="coinIds">币种列表</label>
-        <textarea id="coinIds" spellcheck="false" rows="12"></textarea>
+        <label for="dataSource">数据源</label>
+        <select id="dataSource">
+          <option value="coingecko">CoinGecko</option>
+          <option value="binance">Binance</option>
+          <option value="okx">OKX</option>
+          <option value="coinbase">Coinbase</option>
+        </select>
+
+        <label id="itemsLabel" for="marketItems">币种列表</label>
+        <textarea id="marketItems" spellcheck="false" rows="12"></textarea>
 
         <div class="actions">
           <button id="saveButton" type="button">保存</button>
@@ -26,7 +34,7 @@
       </section>
 
       <aside class="examples">
-        <h2>默认热门 10 种</h2>
+        <h2 id="examplesTitle">默认热门 10 种</h2>
         <ul id="defaultList"></ul>
       </aside>
     </main>

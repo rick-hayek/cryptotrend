@@ -9,5 +9,11 @@
   },
   "options_page": "options.html",
   "permissions": ["storage"],
-  "host_permissions": ["https://api.coingecko.com/*"]
+  "host_permissions": [
+    "https://api.coingecko.com/*",
+    "https://api.binance.com/*",
+    "https://www.okx.com/*",
+    "https://api.coinbase.com/*",
+    "https://api.exchange.coinbase.com/*"
+  ]
 }
