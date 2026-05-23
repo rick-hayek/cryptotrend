@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CryptoTrend</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <header class="topbar">
+        <div>
+          <h1>CryptoTrend</h1>
+          <p id="statusText">加载行情中...</p>
+        </div>
+        <button id="refreshButton" class="icon-button" type="button" title="刷新行情" aria-label="刷新行情">
+          ↻
+        </button>
+      </header>
+
+      <section id="marketList" class="market-list" aria-live="polite"></section>
+
+      <section id="emptyState" class="empty-state" hidden>
+        <strong>还没有可显示的币种</strong>
+        <span>打开设置添加 CoinGecko 币种 ID。</span>
+      </section>
+
+      <footer class="footer">
+        <span id="updatedAt">尚未更新</span>
+        <button id="openOptions" type="button">设置</button>
+      </footer>
+    </main>
+
+    <script type="module" src="popup.js"></script>
+  </body>
+</html>

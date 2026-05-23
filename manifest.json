@@ -1,0 +1,13 @@
+{
+  "manifest_version": 3,
+  "name": "CryptoTrend",
+  "description": "Show live cryptocurrency market prices and customize the watchlist.",
+  "version": "0.1.0",
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "CryptoTrend"
+  },
+  "options_page": "options.html",
+  "permissions": ["storage"],
+  "host_permissions": ["https://api.coingecko.com/*"]
+}

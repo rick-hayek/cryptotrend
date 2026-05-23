@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CryptoTrend 设置</title>
+    <link rel="stylesheet" href="options.css" />
+  </head>
+  <body>
+    <main class="page">
+      <section class="settings">
+        <header>
+          <h1>CryptoTrend 设置</h1>
+          <p>配置弹窗里显示的 CoinGecko 币种 ID。每行一个，例如 bitcoin、ethereum。</p>
+        </header>
+
+        <label for="coinIds">币种列表</label>
+        <textarea id="coinIds" spellcheck="false" rows="12"></textarea>
+
+        <div class="actions">
+          <button id="saveButton" type="button">保存</button>
+          <button id="resetButton" class="secondary" type="button">恢复默认</button>
+        </div>
+
+        <p id="feedback" class="feedback" role="status"></p>
+      </section>
+
+      <aside class="examples">
+        <h2>默认热门 10 种</h2>
+        <ul id="defaultList"></ul>
+      </aside>
+    </main>
+
+    <script type="module" src="options.js"></script>
+  </body>
+</html>
