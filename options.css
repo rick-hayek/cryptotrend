@@ -54,7 +54,7 @@ textarea {
 }
 
 .settings {
-  padding: 30px;
+  padding: 24px;
 }
 
 .examples {
@@ -161,8 +161,8 @@ button.secondary {
 }
 
 .feedback {
-  min-height: 22px;
-  margin-top: 14px;
+  min-height: 8px;
+  margin-top: 8px;
   color: var(--accent);
   font-size: 13px;
 }
