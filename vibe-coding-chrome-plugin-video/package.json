@@ -1,0 +1,13 @@
+{
+  "name": "vibe-coding-chrome-plugin-video",
+  "private": true,
+  "scripts": {
+    "lint": "hyperframes lint",
+    "inspect": "hyperframes inspect --samples 12 --at 1.1,3.4,6.2,8.8",
+    "preview": "hyperframes preview --port 3017",
+    "render": "hyperframes render --output renders/codex-vibe-coding-chrome-plugin.mp4 --quality standard --fps 30"
+  },
+  "devDependencies": {
+    "hyperframes": "latest"
+  }
+}

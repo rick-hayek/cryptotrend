@@ -72,7 +72,12 @@ const resetButton = document.querySelector("#resetButton");
 const defaultList = document.querySelector("#defaultList");
 const examplesTitle = document.querySelector("#examplesTitle");
 
+let activeSource = "coingecko";
+let loadSequence = 0;
+const itemDrafts = {};
+
 sourceSelect.addEventListener("change", handleSourceChange);
+marketItemsInput.addEventListener("input", handleItemsInput);
 saveButton.addEventListener("click", saveItems);
 resetButton.addEventListener("click", resetItems);
 
@@ -84,6 +89,7 @@ async function loadSettings() {
     coinIds: DEFAULT_COIN_IDS
   });
   const source = DATA_SOURCES[result[SOURCE_KEY]] ? result[SOURCE_KEY] : "coingecko";
+  activeSource = source;
   sourceSelect.value = source;
   await loadItemsForSource(source);
 }
@@ -91,7 +97,7 @@ async function loadSettings() {
 async function saveItems() {
   const source = sourceSelect.value;
   const sourceConfig = DATA_SOURCES[source];
-  const items = parseItems(marketItemsInput.value, source);
+  const items = parseItems(itemDrafts[source] ?? marketItemsInput.value, source);
 
   if (items.length === 0) {
     showFeedback("请至少保留一个行情项。");
@@ -102,6 +108,7 @@ async function saveItems() {
     [SOURCE_KEY]: source,
     [sourceConfig.storageKey]: items
   });
+  itemDrafts[source] = items.join("\n");
   marketItemsInput.value = items.join("\n");
   renderDefaultList(source, items);
   showFeedback(`已保存 ${sourceConfig.label} 的 ${items.length} 个行情项。`);
@@ -114,22 +121,45 @@ async function resetItems() {
     [SOURCE_KEY]: source,
     [DATA_SOURCES[source].storageKey]: items
   });
+  itemDrafts[source] = items.join("\n");
   marketItemsInput.value = items.join("\n");
   renderDefaultList(source, items);
   showFeedback(`已恢复 ${DATA_SOURCES[source].label} 默认热门 10 项。`);
 }
 
 async function handleSourceChange() {
+  itemDrafts[activeSource] = marketItemsInput.value;
   const source = sourceSelect.value;
+  await persistItemsForSource(activeSource);
+  activeSource = source;
   await chrome.storage.sync.set({ [SOURCE_KEY]: source });
-  await loadItemsForSource(source, { refreshExchangeDefaults: true });
+  await loadItemsForSource(source);
+}
+
+async function persistItemsForSource(source) {
+  const sourceConfig = DATA_SOURCES[source];
+  const items = parseItems(itemDrafts[source] ?? marketItemsInput.value, source);
+  if (items.length === 0) {
+    return;
+  }
+
+  await chrome.storage.sync.set({ [sourceConfig.storageKey]: items });
+  itemDrafts[source] = items.join("\n");
 }
 
 async function loadItemsForSource(source, options = {}) {
+  const sequence = ++loadSequence;
   const sourceConfig = DATA_SOURCES[source];
   sourceHelp.textContent = sourceConfig.help;
   itemsLabel.textContent = sourceConfig.itemLabel;
   showFeedback("");
+
+  if (itemDrafts[source] !== undefined) {
+    const draftItems = parseItems(itemDrafts[source], source);
+    marketItemsInput.value = itemDrafts[source];
+    renderDefaultList(source, draftItems);
+    return;
+  }
 
   const result = await chrome.storage.sync.get({
     [sourceConfig.storageKey]: sourceConfig.defaultItems
@@ -143,8 +173,17 @@ async function loadItemsForSource(source, options = {}) {
     showFeedback(`已加载 ${sourceConfig.label} 热门 USDT 交易对。`);
   }
 
+  if (sequence !== loadSequence || source !== activeSource) {
+    return;
+  }
+
+  itemDrafts[source] = items.join("\n");
   marketItemsInput.value = items.join("\n");
   renderDefaultList(source, items);
+}
+
+function handleItemsInput() {
+  itemDrafts[activeSource] = marketItemsInput.value;
 }
 
 function parseItems(value, source) {

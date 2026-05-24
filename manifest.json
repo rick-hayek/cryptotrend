@@ -1,11 +1,23 @@
 {
   "manifest_version": 3,
-  "name": "CryptoTrend",
+  "name": "CryptoTrends",
   "description": "Show live cryptocurrency market prices and customize the watchlist.",
   "version": "0.1.0",
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
   "action": {
     "default_popup": "popup.html",
-    "default_title": "CryptoTrend"
+    "default_title": "CryptoTrends",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
   },
   "options_page": "options.html",
   "permissions": ["storage"],

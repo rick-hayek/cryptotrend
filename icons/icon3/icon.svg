@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <!-- Definitions for gradients, shadows, and filters -->
+  <defs>
+    <!-- Background Gradient: Soft modern light gray-blue -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f6f9fe" />
+      <stop offset="100%" stop-color="#edf2fa" />
+    </linearGradient>
+
+    <!-- Badge Gradient: Premium Royal Blue -->
+    <linearGradient id="badgeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2563eb" />
+      <stop offset="100%" stop-color="#1d4ed8" />
+    </linearGradient>
+
+    <!-- Main Icon Shadow -->
+    <filter id="iconShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="24" stdDeviation="28" flood-color="#0f172a" flood-opacity="0.08" />
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#0f172a" flood-opacity="0.04" />
+    </filter>
+
+    <!-- Candle Drop Shadow -->
+    <filter id="candleShadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="#0f172a" flood-opacity="0.06" />
+    </filter>
+
+    <!-- Blue Badge Shadow -->
+    <filter id="badgeShadow" x="-25%" y="-25%" width="150%" height="150%">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#1e40af" flood-opacity="0.2" />
+    </filter>
+  </defs>
+
+  <!-- Main App Icon Squircle -->
+  <rect x="12" y="12" width="488" height="488" rx="116" fill="url(#bgGrad)" filter="url(#iconShadow)" />
+  
+  <!-- Outer Border Stroke (Subtle definition border) -->
+  <rect x="13" y="13" width="486" height="486" rx="115" fill="none" stroke="#ffffff" stroke-width="3" />
+  <rect x="15" y="15" width="482" height="482" rx="113" fill="none" stroke="#e2eafd" stroke-width="1.5" />
+
+  <!-- Background Grid Lines (Clean and subtle financial style) -->
+  <g opacity="0.65" stroke="#e2eafd" stroke-width="2" stroke-linecap="round">
+    <line x1="70" y1="230" x2="385" y2="230" />
+    <line x1="70" y1="298" x2="385" y2="298" />
+    <line x1="70" y1="366" x2="385" y2="366" />
+  </g>
+
+  <!-- K-Line Candlesticks -->
+  <!-- Candle 1: Green (Bullish) -->
+  <g filter="url(#candleShadow)">
+    <line x1="110" y1="280" x2="110" y2="395" stroke="#10b981" stroke-width="4.5" stroke-linecap="round" />
+    <rect x="94" y="305" width="32" height="60" rx="11" fill="#10b981" />
+  </g>
+
+  <!-- Candle 2: Red (Bearish) -->
+  <g filter="url(#candleShadow)">
+    <line x1="172" y1="255" x2="172" y2="375" stroke="#ef4444" stroke-width="4.5" stroke-linecap="round" />
+    <rect x="156" y="285" width="32" height="55" rx="11" fill="#ef4444" />
+  </g>
+
+  <!-- Candle 3: Green (Bullish) -->
+  <g filter="url(#candleShadow)">
+    <line x1="234" y1="210" x2="234" y2="330" stroke="#10b981" stroke-width="4.5" stroke-linecap="round" />
+    <rect x="218" y="240" width="32" height="60" rx="11" fill="#10b981" />
+  </g>
+
+  <!-- Candle 4: Green (Bullish) -->
+  <g filter="url(#candleShadow)">
+    <line x1="296" y1="165" x2="296" y2="280" stroke="#10b981" stroke-width="4.5" stroke-linecap="round" />
+    <rect x="280" y="198" width="32" height="60" rx="11" fill="#10b981" />
+  </g>
+
+  <!-- Candle 5: Red (Bearish) -->
+  <g filter="url(#candleShadow)">
+    <line x1="358" y1="185" x2="358" y2="300" stroke="#ef4444" stroke-width="4.5" stroke-linecap="round" />
+    <rect x="342" y="215" width="32" height="55" rx="11" fill="#ef4444" />
+  </g>
+
+  <!-- End Node: Blue Bitcoin Badge at the Top Right -->
+  <g filter="url(#badgeShadow)">
+    <circle cx="372" cy="138" r="46" fill="url(#badgeGrad)" stroke="#ffffff" stroke-width="3" />
+    <!-- Exact Vector Path for the official Bitcoin "₿" Logo -->
+    <g fill="#ffffff" transform="translate(372, 138) scale(1.15) translate(-32, -32)">
+      <path d="m46.103,27.444c0.637-4.258-2.605-6.547-7.038-8.074l1.438-5.768-3.511-0.875-1.4,5.616c-0.923-0.23-1.871-0.447-2.813-0.662l1.41-5.653-3.509-0.875-1.439,5.766c-0.764-0.174-1.514-0.346-2.242-0.527l0.004-0.018-4.842-1.209-0.934,3.75s2.605,0.597,2.55,0.634c1.422,0.355,1.679,1.296,1.636,2.042l-1.638,6.571c0.098,0.025,0.225,0.061,0.365,0.117-0.117-0.029-0.242-0.061-0.371-0.092l-2.296,9.205c-0.174,0.432-0.615,1.08-1.609,0.834,0.035,0.051-2.552-0.637-2.552-0.637l-1.743,4.019,4.569,1.139c0.85,0.213,1.683,0.436,2.503,0.646l-1.453,5.834,3.507,0.875,1.439-5.772c0.958,0.26,1.888,0.5,2.798,0.726l-1.434,5.745,3.511,0.875,1.453-5.823c5.987,1.133,10.489,0.676,12.384-4.739,1.527-4.36-0.076-6.875-3.226-8.515,2.294-0.529,4.022-2.038,4.483-5.155zm-8.022,11.249c-1.085,4.36-8.426,2.003-10.806,1.412l1.928-7.729c2.38,0.594,10.012,1.77,8.878,6.317zm1.086-11.312c-0.99,3.966-7.1,1.951-9.082,1.457l1.748-7.01c1.982,0.494,8.365,1.416,7.334,5.553z" />
+    </g>
+  </g>
+
+  <!-- Bottom Typography: COINVIEW -->
+  <text x="259" y="450" font-family="'Inter', system-ui, -apple-system, sans-serif" font-size="40" font-weight="900" fill="#1e40af" letter-spacing="6" text-anchor="middle">COINVIEW</text>
+</svg>

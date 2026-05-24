@@ -1,0 +1,562 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Codex Vibe Coding Chrome Plugin</title>
+    <style>
+      :root {
+        --bg: #07101a;
+        --surface: #111b28;
+        --surface-2: #1a2534;
+        --line: rgba(154, 168, 187, 0.22);
+        --text: #f4f7fb;
+        --muted: #9aa8bb;
+        --teal: #38e3bb;
+        --cyan: #21c6d6;
+        --yellow: #ffd34d;
+        --red: #ff6d80;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family: Inter, system-ui, sans-serif;
+      }
+
+      #codex-vibe-plugin {
+        position: relative;
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background:
+          radial-gradient(circle at 76% 10%, rgba(56, 227, 187, 0.2), transparent 32%),
+          radial-gradient(circle at 16% 86%, rgba(33, 198, 214, 0.15), transparent 34%),
+          linear-gradient(135deg, #07101a 0%, #0c1420 46%, #07101a 100%);
+      }
+
+      .grid {
+        position: absolute;
+        inset: 0;
+        opacity: 0.16;
+        background-image:
+          linear-gradient(rgba(154, 168, 187, 0.16) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(154, 168, 187, 0.16) 1px, transparent 1px);
+        background-size: 80px 80px;
+      }
+
+      .scan {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, transparent 0%, rgba(56, 227, 187, 0.1) 50%, transparent 100%);
+        height: 240px;
+        opacity: 0.42;
+      }
+
+      .scene {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        padding: 76px 92px;
+        display: flex;
+        flex-direction: column;
+        gap: 34px;
+      }
+
+      .scene-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 36px;
+      }
+
+      .kicker {
+        color: var(--teal);
+        font: 700 28px/1.2 JetBrains Mono, Consolas, monospace;
+        letter-spacing: 0;
+        text-transform: uppercase;
+      }
+
+      h1,
+      h2 {
+        margin: 0;
+        letter-spacing: 0;
+      }
+
+      h1 {
+        max-width: 920px;
+        font-size: 92px;
+        line-height: 0.96;
+        font-weight: 900;
+      }
+
+      h2 {
+        font-size: 64px;
+        line-height: 1;
+        font-weight: 850;
+      }
+
+      .muted {
+        color: var(--muted);
+      }
+
+      .pill {
+        border: 1px solid rgba(56, 227, 187, 0.36);
+        background: rgba(17, 27, 40, 0.82);
+        border-radius: 999px;
+        padding: 16px 26px;
+        color: var(--teal);
+        font-size: 24px;
+        font-weight: 750;
+        white-space: nowrap;
+      }
+
+      .prompt-card,
+      .code-panel,
+      .chrome-card,
+      .shot-frame,
+      .step-card {
+        border: 1px solid var(--line);
+        background: rgba(17, 27, 40, 0.84);
+        box-shadow: 0 24px 80px rgba(0, 0, 0, 0.36);
+        backdrop-filter: blur(14px);
+      }
+
+      .prompt-card {
+        margin-top: 30px;
+        width: 1120px;
+        border-radius: 24px;
+        padding: 34px;
+      }
+
+      .prompt-label {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 22px;
+        color: var(--muted);
+        font-size: 26px;
+        font-weight: 700;
+      }
+
+      .prompt-text {
+        min-height: 150px;
+        color: var(--text);
+        font-size: 38px;
+        line-height: 1.36;
+        font-weight: 800;
+      }
+
+      .caret {
+        display: inline-block;
+        width: 4px;
+        height: 42px;
+        margin-left: 6px;
+        background: var(--teal);
+        vertical-align: -7px;
+      }
+
+      .flow {
+        margin-top: auto;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 22px;
+      }
+
+      .step-card {
+        min-height: 150px;
+        border-radius: 20px;
+        padding: 24px;
+      }
+
+      .step-index {
+        color: var(--yellow);
+        font: 800 24px/1 JetBrains Mono, Consolas, monospace;
+      }
+
+      .step-title {
+        margin-top: 22px;
+        font-size: 32px;
+        line-height: 1.1;
+        font-weight: 850;
+      }
+
+      .build-layout {
+        flex: 1;
+        min-height: 0;
+        display: grid;
+        grid-template-columns: 1fr 660px;
+        gap: 34px;
+        align-items: stretch;
+      }
+
+      .code-panel {
+        border-radius: 24px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .window-bar {
+        height: 68px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 0 24px;
+        border-bottom: 1px solid var(--line);
+        color: var(--muted);
+        font-size: 22px;
+        font-weight: 750;
+      }
+
+      .dot {
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background: var(--red);
+      }
+
+      .dot:nth-child(2) {
+        background: var(--yellow);
+      }
+
+      .dot:nth-child(3) {
+        background: var(--teal);
+        margin-right: 18px;
+      }
+
+      pre {
+        margin: 0;
+        flex: 1;
+        padding: 34px 38px;
+        font: 600 30px/1.55 JetBrains Mono, Consolas, monospace;
+        color: #cfe7f1;
+        white-space: pre-wrap;
+      }
+
+      .code-key {
+        color: var(--teal);
+      }
+
+      .code-str {
+        color: var(--yellow);
+      }
+
+      .chrome-card {
+        border-radius: 24px;
+        padding: 30px;
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+      }
+
+      .chrome-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 28px;
+        font-weight: 850;
+      }
+
+      .toggle {
+        width: 104px;
+        height: 56px;
+        border-radius: 999px;
+        padding: 7px;
+        background: rgba(56, 227, 187, 0.18);
+        border: 1px solid rgba(56, 227, 187, 0.36);
+      }
+
+      .toggle::after {
+        content: "";
+        display: block;
+        margin-left: 45px;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: var(--teal);
+        box-shadow: 0 0 24px rgba(56, 227, 187, 0.8);
+      }
+
+      .file-list {
+        display: grid;
+        gap: 14px;
+      }
+
+      .file-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        min-height: 66px;
+        border: 1px solid rgba(154, 168, 187, 0.16);
+        background: rgba(7, 16, 26, 0.66);
+        border-radius: 14px;
+        padding: 0 20px;
+        font: 700 25px/1 JetBrains Mono, Consolas, monospace;
+      }
+
+      .check {
+        color: var(--teal);
+      }
+
+      .final-layout {
+        flex: 1;
+        min-height: 0;
+        display: grid;
+        grid-template-columns: 1.25fr 0.75fr;
+        gap: 34px;
+        align-items: center;
+      }
+
+      .shot-frame {
+        border-radius: 24px;
+        padding: 18px;
+        overflow: hidden;
+      }
+
+      .shot-frame img {
+        width: 100%;
+        display: block;
+        border-radius: 14px;
+      }
+
+      .popup-frame {
+        align-self: stretch;
+        display: flex;
+        align-items: center;
+      }
+
+      .popup-frame img {
+        max-height: 880px;
+        object-fit: contain;
+      }
+
+      .callout {
+        position: absolute;
+        right: 92px;
+        bottom: 74px;
+        width: 610px;
+        border-left: 6px solid var(--teal);
+        padding: 24px 28px;
+        background: rgba(7, 16, 26, 0.82);
+        border-radius: 18px;
+        font-size: 32px;
+        line-height: 1.24;
+        font-weight: 850;
+        box-shadow: 0 16px 48px rgba(0, 0, 0, 0.34);
+      }
+
+      .cursor {
+        position: absolute;
+        width: 44px;
+        height: 44px;
+        z-index: 8;
+        filter: drop-shadow(0 14px 18px rgba(0, 0, 0, 0.44));
+      }
+
+      .cursor::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 0;
+        height: 0;
+        border-top: 44px solid var(--text);
+        border-right: 28px solid transparent;
+      }
+
+      .flash {
+        position: absolute;
+        inset: 0;
+        background: rgba(56, 227, 187, 0.12);
+        opacity: 0;
+        pointer-events: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="codex-vibe-plugin"
+      data-composition-id="codex-vibe-plugin"
+      data-start="0"
+      data-duration="10"
+      data-width="1920"
+      data-height="1080"
+      data-track-index="0"
+    >
+      <div class="grid" data-layout-ignore></div>
+      <div class="scan" data-layout-ignore></div>
+      <div class="flash" data-layout-ignore></div>
+
+      <section class="scene intro">
+        <div class="scene-top">
+          <div>
+            <div class="kicker">10 秒 Vibe Coding</div>
+            <h1>用 Codex 快速做出 Chrome 插件</h1>
+          </div>
+          <div class="pill">Crypto Trends</div>
+        </div>
+        <div class="prompt-card">
+          <div class="prompt-label">
+            <span>给 Codex 的一句话需求</span>
+            <span>manifest v3</span>
+          </div>
+          <div class="prompt-text">
+            “做一个插件：展示 Binance 热门 USDT 交易对，带设置页和实时价格。”
+            <span class="caret"></span>
+          </div>
+        </div>
+        <div class="flow">
+          <div class="step-card">
+            <div class="step-index">01</div>
+            <div class="step-title">描述目标和截图参考</div>
+          </div>
+          <div class="step-card">
+            <div class="step-index">02</div>
+            <div class="step-title">让 Codex 生成代码</div>
+          </div>
+          <div class="step-card">
+            <div class="step-index">03</div>
+            <div class="step-title">加载插件，立刻试用</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="scene build">
+        <div class="scene-top">
+          <div>
+            <div class="kicker">Codex 正在实现</div>
+            <h2>从自然语言到插件文件</h2>
+          </div>
+          <div class="pill">popup + options + API</div>
+        </div>
+        <div class="build-layout">
+          <div class="code-panel">
+            <div class="window-bar">
+              <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+              <span>cryptotrend / generated files</span>
+            </div>
+            <pre><span class="code-key">manifest.json</span>  插件权限与入口
+<span class="code-key">popup.html</span>     行情卡片界面
+<span class="code-key">popup.js</span>       Binance 数据拉取
+<span class="code-key">options.html</span>   自定义交易对
+<span class="code-key">options.js</span>     保存配置
+
+<span class="code-str">chrome://extensions</span>
+Load unpacked → cryptotrend</pre>
+          </div>
+          <div class="chrome-card">
+            <div class="chrome-head">
+              <span>Chrome 扩展程序</span>
+              <span class="toggle" aria-hidden="true"></span>
+            </div>
+            <div class="file-list">
+              <div class="file-row"><span>Crypto Trends</span><span class="check">ON</span></div>
+              <div class="file-row"><span>Binance API</span><span class="check">OK</span></div>
+              <div class="file-row"><span>设置页</span><span class="check">OK</span></div>
+              <div class="file-row"><span>行情弹窗</span><span class="check">OK</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="scene result">
+        <div class="scene-top">
+          <div>
+            <div class="kicker">成品预览</div>
+            <h2>设置交易对，打开插件看行情</h2>
+          </div>
+          <div class="pill">从想法到可用</div>
+        </div>
+        <div class="final-layout">
+          <div class="shot-frame options-frame">
+            <img src="assets/options.png" alt="Crypto Trends 设置页" />
+          </div>
+          <div class="shot-frame popup-frame">
+            <img src="assets/popup.png" alt="Crypto Trends 插件弹窗" />
+          </div>
+        </div>
+        <div class="callout">一句话需求 + Codex 迭代，就能把插件原型跑起来。</div>
+      </section>
+
+      <div class="cursor" data-layout-ignore></div>
+
+      <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+      <script>
+        window.__timelines = window.__timelines || {};
+
+        const tl = gsap.timeline({ paused: true });
+        const duration = 10;
+
+        gsap.set(".build, .result", { opacity: 0, pointerEvents: "none" });
+        gsap.set(".cursor", { x: 1210, y: 786, opacity: 0, scale: 0.92 });
+        gsap.set(".scan", { y: -260 });
+
+        tl.fromTo(".scan", { y: -260 }, {
+          y: 1120,
+          duration,
+          ease: "none",
+          repeat: 0
+        }, 0);
+
+        tl.from(".intro .kicker", { y: 28, opacity: 0, duration: 0.45, ease: "power3.out" }, 0.12)
+          .from(".intro h1", { y: 46, opacity: 0, duration: 0.56, ease: "power3.out" }, 0.24)
+          .from(".intro .pill", { x: 40, opacity: 0, duration: 0.42, ease: "power2.out" }, 0.36)
+          .from(".prompt-card", { y: 44, opacity: 0, scale: 0.98, duration: 0.56, ease: "power3.out" }, 0.72)
+          .from(".flow .step-card", {
+            y: 34,
+            opacity: 0,
+            duration: 0.44,
+            stagger: 0.12,
+            ease: "power2.out"
+          }, 1.16)
+          .to(".caret", { opacity: 0.1, duration: 0.24, repeat: 5, yoyo: true, ease: "power1.inOut" }, 0.86);
+
+        tl.to(".cursor", { opacity: 1, duration: 0.18, ease: "power1.out" }, 2.12)
+          .to(".cursor", { x: 180, y: 850, duration: 0.58, ease: "power2.inOut" }, 2.2)
+          .to(".flash", { opacity: 1, duration: 0.08, ease: "power1.out" }, 2.78)
+          .to(".flash", { opacity: 0, duration: 0.22, ease: "power1.out" }, 2.86)
+          .to(".intro", { y: -46, opacity: 0, duration: 0.42, ease: "power2.in" }, 2.92)
+          .set(".build", { pointerEvents: "auto" }, 3.2)
+          .to(".build", { opacity: 1, duration: 0.22, ease: "power1.out" }, 3.2);
+
+        tl.from(".build .kicker", { y: 24, opacity: 0, duration: 0.36, ease: "power3.out" }, 3.28)
+          .from(".build h2", { y: 34, opacity: 0, duration: 0.46, ease: "power3.out" }, 3.38)
+          .from(".code-panel", { x: -52, opacity: 0, scale: 0.985, duration: 0.5, ease: "power3.out" }, 3.58)
+          .from(".chrome-card", { x: 52, opacity: 0, scale: 0.985, duration: 0.5, ease: "power3.out" }, 3.74)
+          .from(".file-row", {
+            x: 26,
+            opacity: 0,
+            duration: 0.32,
+            stagger: 0.1,
+            ease: "power2.out"
+          }, 4.18);
+
+        tl.to(".cursor", { x: 1432, y: 266, duration: 0.6, ease: "power2.inOut" }, 5.42)
+          .to(".chrome-card", { boxShadow: "0 0 0 5px rgba(56, 227, 187, 0.34), 0 24px 80px rgba(0,0,0,0.36)", duration: 0.18 }, 5.94)
+          .to(".chrome-card", { boxShadow: "0 24px 80px rgba(0,0,0,0.36)", duration: 0.42 }, 6.12)
+          .to(".build", { y: -42, opacity: 0, duration: 0.42, ease: "power2.in" }, 6.36)
+          .set(".result", { pointerEvents: "auto" }, 6.68)
+          .to(".result", { opacity: 1, duration: 0.22, ease: "power1.out" }, 6.68);
+
+        tl.from(".result .kicker", { y: 24, opacity: 0, duration: 0.34, ease: "power3.out" }, 6.76)
+          .from(".result h2", { y: 34, opacity: 0, duration: 0.44, ease: "power3.out" }, 6.86)
+          .from(".options-frame", { x: -58, opacity: 0, scale: 0.985, duration: 0.54, ease: "power3.out" }, 7.04)
+          .from(".popup-frame", { x: 58, opacity: 0, scale: 0.985, duration: 0.54, ease: "power3.out" }, 7.26)
+          .from(".callout", { y: 36, opacity: 0, duration: 0.44, ease: "power2.out" }, 8.04)
+          .to(".cursor", { x: 1550, y: 238, duration: 0.52, ease: "power2.inOut" }, 8.2)
+          .to(".popup-frame", { boxShadow: "0 0 0 5px rgba(56, 227, 187, 0.32), 0 24px 80px rgba(0,0,0,0.36)", duration: 0.18 }, 8.72)
+          .to(".popup-frame", { boxShadow: "0 24px 80px rgba(0,0,0,0.36)", duration: 0.56 }, 8.9)
+          .to(".cursor", { opacity: 0, duration: 0.28, ease: "power1.in" }, 9.35);
+
+        window.__timelines["codex-vibe-plugin"] = tl;
+      </script>
+    </div>
+  </body>
+</html>
